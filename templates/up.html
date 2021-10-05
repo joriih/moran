@@ -65,7 +65,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <strong>GiGA Service Checker</strong>
     </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,17 +74,17 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item ">
-            <a class="nav-link" href="#"> 품질진단 요청 </a>
+            <a class="nav-link" href="/request_history"> 품질진단 요청 </a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#"> 업셀링 </a>
+            <a class="nav-link" href="/up"> 업셀링 </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#"> 해지징후 </a>
+            <a class="nav-link" href="/bye"> 해지징후 </a>
           </li>
           
           <li class="nav-item">
-              <a class="nav-link" href="#"> 요청이력 </a>
+              <a class="nav-link" href="/history"> 요청이력 </a>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -152,7 +152,7 @@
               <div class = "other_input">
                 <div>
                     <strong > SAID/접속번호 </strong>
-                    <input style ="margin-top:10px;" class="form-control" type="search" id="search" placeholder="접속번호/SAID 입력" maxlength="12" size="50px" onkeyup="stoppedTyping()" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                    <input style ="margin-top:10px;" class="form-control" name = "search" type="search" id="search" placeholder="접속번호/SAID 입력" maxlength="12" size="50px" onkeyup="stoppedTyping()" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
                 </div>
                 <hr>
                 <div style="margin-top:30px;">
@@ -179,7 +179,7 @@
                 <hr>
                 <div style="margin-top:30px;">
                     <strong style=> 특이사항 </strong>
-                    <input  style ="margin-top:10px;" class="form-control" type="search" id="other" placeholder="특이사항 입력" size="50px" />
+                    <input  style ="margin-top:10px;" class="form-control" name = "other" type="search" id="other" placeholder="특이사항 입력" size="50px" />
                 </div>
                 
 
@@ -238,10 +238,37 @@
         })
       }
     </script>
+    <script>
+        document.getElementById("send_button").onclick = function(){
+            var said = $('input[name = search]').val();
+            var other = $('input[name = other]').val();
+            var service_type = $('input[name = service_type]:checked').val();
+            var items = $('input:checkbox[type=checkbox]:checked').map(function () {
+                return this.value;
+            }).get();
+            if(said.length == 12){
+                var sa_type = "접속번호";
+            }else if(said.length == 11){
+                var sa_type = "SAID";
+            }else{
+                alert("SAID/접속번호 오류");
+            }
+            var data = { "sa_type" : sa_type, "said" : said, "service_type" : service_type, "items" : items, "other" : other };
+            $.ajax({
+                url : '/request_up',
+                type : 'POST',
+                data : JSON.stringify(data),
+                contentType : "application/json",
+                success : function(result){
+                    alert("메일 전송이 완료되었습니다.");
+                }
+            });
+        }
+    </script>
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

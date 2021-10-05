@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>GiGA Service Checker</title>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap');
+        
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic+Coding:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Gluten&display=swap');
+        body{
+            font-family: 'Gowun Dodum', sans-serif; }
+        h1 { text-align : center; font-family: 'Gowun Dodum', sans-serif; 
+            margin-top : 100px; margin-bottom: 50px;}
+        ul { list-style: none;}
+        li { 
+            display: inline;
+            cursor: pointer;
+        }
+        .nav-link { font-family: 'Nanum Gothic Coding', monospace; }
+        #section { background-color : #f2f2f2; padding-top : 100px; padding-bottom: 100px; font-size: 1.3rem;}
+        #send_button {margin-top:30px; background-color: #5ddfde; border-radius: 10px; border : 1px solid #5ddfde; height:50px; font-weight: bold;}
+        .icon01, .icon02 {
+            border: 1px solid #d9d9d9;
+            border-radius: 10px;
+            background-color: #fff;
+            color: black;
+            width: 200px;
+            height: 50px;
+            display: inline-block;
+        }
+        .icon01 { margin-right :30px; background-color: #5ddfde; border: 1px dashed grey;}
+        span { line-height: 2.2; color : black;}
+        a { 
+            text-decoration: none !important;}
+        ul { padding: 0;}
+        .other_input {
+            border: 1px solid #d9d9d9;
+            border-radius: 10px;
+            background-color: #fff;
+            padding :30px 150px 30px;
+            
+        }
+        #send_button { width: 500px;}
+        input[type="radio"]{
+          display: none;
+        }
+        label { cursor: pointer; }
+        input { background-color: #fff !important; border: 1px solid black !important;}
+        #selectAll { width: 1.5rem; height: 1.5rem; }
+        #speed_check { width: 1.5rem; height: 1.5rem;}
+        #quality_check { width: 1.5rem; height: 1.5rem;}
+        input[type="checkbox"] { /* change "blue" browser chrome to yellow */
+          filter: invert(0%) hue-rotate(138deg) brightness(1.9);
+        }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="#">
+        <!-- <img src="../static/emoji.png" width="30" height="30"  class="d-inline-block align-top" alt=""> -->
+        <strong>GiGA Service Checker</strong>
+    </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item ">
+            <a class="nav-link" href="#"> 품질진단 요청 </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="#"> 업셀링 </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#"> 해지징후 </a>
+          </li>
+          
+          <li class="nav-item">
+              <a class="nav-link" href="#"> 요청이력 </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <!-- Nav Item - Alerts -->
+          <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  
+                  <i class="bi bi-bell-fill" style="color :black;" onclick = "remove_badge()"></i>
+                  <!-- Counter - Alerts -->
+                  <span id ="badge" class="badge badge-danger badge-counter" onclick = "remove_badge()"></span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                  aria-labelledby="alertsDropdown">
+                  <h6 class="dropdown-header">
+                      요청
+                  
+                  </h6>
+                  <a  class="dropdown-item d-flex align-items-center" onclick="badge_go()">
+                      <div class="mr-3" id = "badge_content">
+                      </div>
+                      <div id = "alert_center">
+                          <div id = "alert_time" class="small text-gray-500"></div>
+                          <span id = "alert_content" class="font-weight-bold"></span>
+                      </div>
+                  </a>
+                  
+                  <a class="dropdown-item text-center small text-gray-500" onclick="badge_go()">결과 확인하기</a>
+              </div>
+          </li>
+
+          
+          <div class="topbar-divider d-none d-sm-block"></div>
+
+          <!-- Nav Item - Login-->
+          <li id="login-menu" class="nav-item no-arrow">
+              <a class="nav-link" href="login">
+                  <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="font-size: 1rem;">
+                      LOGOUT
+                      <i class="bi bi-box-arrow-in-right"></i>
+                  </span>
+              </a>
+          </li>
+      </ul>
+      </div>
+    </nav>
+    
+  <h1> <strong>해지징후</strong> </h1>
+    <div id = "section" style="text-align:center; padding-left: 30px; padding-right: 30px; background-color: #f2f2f2;">
+        <div style = "display:inline-block;">
+            <div>
+              <div class="tv_internet_radio">
+                <ul>
+                    <li class="icon01">
+                      <input id = "tv_radio" type ="radio" name = "service_type" value="TV" checked/>
+                      <label><span for = "tv_radio"> TV </span> </label>
+                    </li>
+                    <li class="icon02">
+                      <input id = "internet_radio" type ="radio" name = "service_type" value="인터넷" />
+                      <label><span  for ="internet_radio"> 인터넷 </span></label>
+                    </li>
+                </ul>
+              </div>
+              <div class = "other_input">
+                <div>
+                    <strong > SAID/접속번호 </strong>
+                    <input style ="margin-top:10px;" class="form-control" type="search" id="search" placeholder="접속번호/SAID 입력" maxlength="12" size="50px" onkeyup="stoppedTyping()" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                </div>
+                <hr>
+                <div style="margin-top:30px;">
+                    <strong> 문제 유형</strong>
+                    <ul  style="margin-top: 10px;">
+                        <li>
+                            <input type="checkbox" name = "selectAll" id="selectAll" value = "selectall" onclick = "selectAll(this)"/>
+                            <label class="inpChk v04" for="selectAll" onclick = "selectAll()">전체</label>
+                        </li>
+                        <li>
+                            <label class="inpChk v04" for="speed_check" onclick='checkSelectAll()'>
+                                <input type="checkbox"  name = "up_check" id="speed_check" value = "speed" onclick='checkSelectAll()'/>
+                                속도
+                            </label>
+                        </li>
+                        <li>
+                            <label class="inpChk v04" for="quality_check" onclick='checkSelectAll()'>
+                                <input type="checkbox" name = "up_check" id="quality_check" value = "quality" onclick='checkSelectAll()'/>
+                                품질
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <hr>
+                <div style="margin-top:30px;">
+                    <strong style=> 특이사항 </strong>
+                    <input  style ="margin-top:10px;" class="form-control" type="search" id="other" placeholder="특이사항 입력" size="50px" />
+                </div>
+                
+
+            </div>
+            <button id ="send_button" > 요청하기 </button>
+            
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <script>
+      document.getElementsByClassName("icon01")[0].onclick = function(){ 
+          document.getElementById("internet_radio").innerHTML = false;
+          document.getElementById("tv_radio").checked = true;
+          document.getElementsByClassName("icon01")[0].style = "background-color: #5ddfde; border: 1px dashed grey;";
+          document.getElementsByClassName("icon02")[0].style = "background-color: #fff;";
+
+      }
+      document.getElementsByClassName("icon02")[0].onclick = function(){ 
+          document.getElementById("internet_radio").innerHTML = false;
+          document.getElementById("tv_radio").checked = true;
+          document.getElementsByClassName("icon02")[0].style = "background-color: #5ddfde; border: 1px dashed grey;";
+          document.getElementsByClassName("icon01")[0].style = "background-color: #fff; border: 1px solid #d9d9d9";
+
+      }
+    </script>
+    
+    <script>
+      function checkSelectAll()  {
+        // 전체 체크박스
+        const checkboxes 
+          = document.querySelectorAll('input[name="up_check"]');
+        // 선택된 체크박스
+        const checked 
+          = document.querySelectorAll('input[name="up_check"]:checked');
+        // select all 체크박스
+        const selectAll 
+          = document.querySelector('input[name="selectAll"]');
+        
+        if(checkboxes.length === checked.length)  {
+          selectAll.checked = true;
+        }else {
+          selectAll.checked = false;
+        }
+
+      }
+      function selectAll()  {
+        var selectAll = document.getElementById("selectAll");
+        const checkboxes 
+          = document.querySelectorAll('input[type="checkbox"]');
+        
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = selectAll.checked
+        })
+      }
+    </script>
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>

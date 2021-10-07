@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <title>GiGA Service Checker</title>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap');
+        
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic+Coding:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Gluten&display=swap');
+        body{
+            font-family: "Noto Sans Medium"; }
+        h1 { text-align : center; font-family: "Noto Sans Medium";
+        margin-top : 150px; margin-bottom: 50px;}
+        p { text-align: center; }
+        #section { width : 100%; text-align: center;}
+ 
+        table, th, td {
+        text-align: center; 
+        margin: 50px auto;
+        font-size : 1.7rem;
+        cursor:pointer;
+      }
+      
+      label { cursor:pointer;}
+      input { appearance: none; border-radius: 10px; height: 50px; padding-left: 10px;}
+      #kori { max-width : 500px;}
+      .nav-link { font-family: 'Nanum Gothic Coding', monospace; }
+      .navbar { height: 80px; padding-left:30px; box-shadow: 0 5px 2px -2px rgba(0,0,0,.1); font-size: 1.2rem;}
+      #send_button {
+        background-color: #5ddfde; border-radius: 10px; border : 1px solid #5ddfde; width : 200px; height:50px; font-weight: bold;
+        font-size: 1.3rem;
+      }
+      #clear_button {
+        background-color: #fff; border-radius: 10px; border : 1px solid black; width : 200px; height:50px; font-weight: bold;
+        font-size: 1.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="/">
+          <!-- <img src="../static/emoji.png" width="30" height="30"  class="d-inline-block align-top" alt=""> -->
+          <strong style="font-size:1.6rem">GiGA Service Checker</strong>
+      </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/request_history"> 품질진단 요청 </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/up"> 업셀링 </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/bye"> 해지징후 </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/history"> 요청이력 </a>
+              </li>
+          </ul>
+          <ul class="navbar-nav ml-auto">
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    
+                    <i class="bi bi-bell-fill" style="color :black; margin-top:10px; font-size:1.4rem" onclick = "remove_badge()"></i>
+                    <!-- Counter - Alerts -->
+                    <span id ="badge" class="badge badge-danger badge-counter" onclick = "remove_badge()"></span>
+                </a>
+                <!-- Dropdown - Alerts -->
+                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                    aria-labelledby="alertsDropdown">
+                    <h6 class="dropdown-header">
+                        요청
+                    
+                    </h6>
+                    <a  class="dropdown-item d-flex align-items-center" onclick="badge_go()">
+                        <div class="mr-3" id = "badge_content">
+                        </div>
+                        <div id = "alert_center">
+                            <div id = "alert_time" class="small text-gray-500"></div>
+                            <span id = "alert_content" class="font-weight-bold"></span>
+                        </div>
+                    </a>
+                    
+                    <a class="dropdown-item text-center small text-gray-500" onclick="badge_go()">결과 확인하기</a>
+                </div>
+            </li>
+
+            
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - Login-->
+            <li id="login-menu" class="nav-item no-arrow" style="cursor:pointer">
+                <a class="nav-link" data-toggle="modal" data-target="#logoutModal">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="font-size: 1.3rem;">
+                        LOGOUT
+                        <i class="bi bi-box-arrow-in-right"></i>
+                    </span>
+                </a>
+            </li>
+        </ul>
+        </div>
+      </nav>
+
+      
+
+
+    <h1> <strong>품질진단 요청하기</strong> </h1>
+    <hr/>
+    <div class="container">
+        <div class="row">
+          <div class="col-lg-6" style="margin-top:18px; border: 1px solid #cacaca; border-radius: 10px; padding-bottom: 20px;">
+            <div style="text-align:center; font-weight: bold; font-size: 1.2rem; margin-top:30px;"> 인터넷/TV를 선택한 후, </div>
+            <div style="text-align:center; font-weight: bold;font-size: 1.2rem;"> 접속번호 12자리 또는 SAID 11자리를 입력해주세요. </div>
+            <!-- <div style="text-align:center; font-size: 1.2rem; color:rgb(123, 190, 157)"> 정확한 값을 입력해주세요. </div> -->
+            <div> 
+                <table>
+                    <thead>
+                        <tr>
+                            <td class ="internet_radio_class">
+                                <input id = "internet_radio" type ="radio" name = "service_type" value="인터넷" checked/>
+                                <label  for ="internet_radio"> <img id = "internet_img" src = "../static/제목 없음.png" style="margin-left:3px;width:150px;"/> </label>
+                            </td>
+                            <td class ="tv_radio_class">
+                                <input id = "tv_radio" type ="radio" name = "service_type" value="TV"/>
+                                <label for = "tv_radio"> <img id = "tv_img" style = "margin-top :13px;margin-left:3px; width:150px;"src = "../static/grey_tv.png"/> </label>
+                            </td>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class ="internet_radio_class"> <strong>인터넷</strong> </td>
+                            <td class ="tv_radio_class"> <strong>TV</strong> </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+            <div id = "section">
+                <div class="box" >
+                    <div class="container-1">
+                        <input name = "search" type="search" id="search" placeholder="접속번호/SAID 입력" maxlength="12" size="50px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                    
+                    </div>
+                </div>
+                
+            </div>
+            <diV style=" text-align: center; margin-top : 50px;">
+                <button id = "clear_button"> 초기화하기 </button>
+                <button id = "send_button"> 요청하기 </button>
+            </diV>
+          </div>
+          <div class="col-lg-6" style="text-align: center; margin-bottom: 15px;">
+              <img id = "kori" src = "../static/request.png" style="width:200%; margin-top:20px;"/>
+          </div>
+        </div>
+      </div>
+    
+      <hr/>
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" style="font-family: Noto Sans Medium;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">⨻알림⨻</h5>
+                    </div>
+                    <div class="modal-body">로그아웃 하시겠습니까? 아래 버튼을 클릭해주세요. </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a id="btn-logout"class="btn btn-primary">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        document.getElementById("tv_img").onclick = function(){ 
+            document.getElementById("tv_img").src = "../static/제목 없음2.png";
+            document.getElementById("internet_img").src = "../static/grey_internet.png";
+            document.getElementById("internet_radio").innerHTML = false;
+            document.getElementById("tv_radio").checked = true;
+        }
+        document.getElementById("internet_img").onclick = function(){ 
+            document.getElementById("tv_img").src = "../static/grey_tv.png";
+            document.getElementById("internet_img").src = "../static/제목 없음.png";
+            document.getElementById("internet_radio").checked = true;
+            document.getElementById("tv_radio").checked = false;
+        }
+    </script>
+    <script>
+        document.getElementById("send_button").onclick = function(){
+            var said = $('input[name = search]').val();
+            var service_type = $('input[name = service_type]:checked').val();
+            if(said.length == 12){
+                var sa_type = "접속번호";
+            }else if(said.length == 11){
+                var sa_type = "SAID";
+            }else{
+                alert("SAID/접속번호 오류");
+            }
+            var data = { "sa_type" : sa_type, "said" : said, "service_type" : service_type, "region" : "국사" };
+            $.ajax({
+                url : '/request_said',
+                type : 'POST',
+                data : JSON.stringify(data),
+                contentType : "application/json",
+                success : function(result){
+                    var min = parseInt(result, 10) * 3;
+                    alert(`⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂ \n\n\n ${result}개의 요청이 처리중입니다. \n\n 약 ${min}분 정도 소요됩니다. \n\n\n ⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂⁂`);
+                }
+            });
+        }
+    </script>
+    <script>
+        document.getElementById("clear_button").onclick = function(){
+            document.querySelector('input[name="search"]').value = "";
+            document.getElementById("tv_img").src = "../static/grey_tv.png";
+            document.getElementById("internet_img").src = "../static/제목 없음.png";
+            document.getElementById("internet_radio").checked = true;
+            document.getElementById("tv_radio").checked = false;
+        }
+    </script>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>

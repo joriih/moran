@@ -1,0 +1,789 @@
+<!doctype html>
+
+<html lang="en">
+
+  <head>
+    <!-- Required meta tags -->
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <title>GiGA Service Checker</title>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic+Coding:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Gluten&display=swap');
+        body{
+            font-family: 'Gowun Dodum', sans-serif; }
+        h1 { text-align : center; font-family: "Noto Sans Medium";
+        margin-top : 150px; margin-bottom: 50px;}
+        .nav-link { font-family: 'Nanum Gothic Coding', monospace; }
+        .navbar { height: 80px; padding-left:30px; box-shadow: 0 5px 2px -2px rgba(0,0,0,.1); font-size: 1.2rem;}
+        table { font-size: 1.2rem;}
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="/">
+        <strong>GiGA Service Checker</strong>
+    </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item ">
+            <a class="nav-link" href="/request_history"> 품질진단 요청 </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="/up"> 업셀링 </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/bye"> 해지징후 </a>
+          </li>
+
+          <li class="nav-item active">
+              <a class="nav-link" href="/history"> 요청이력 </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <!-- Nav Item - Alerts -->
+          <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                  <i class="bi bi-bell-fill" style="color :black; margin-top:10px; font-size:1.4rem" onclick = "remove_badge()"></i>
+                  <!-- Counter - Alerts -->
+                  <span id ="badge" class="badge badge-danger badge-counter" onclick = "remove_badge()"></span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                  aria-labelledby="alertsDropdown">
+                  <h6 class="dropdown-header">
+                      요청
+
+                  </h6>
+                  <a  class="dropdown-item d-flex align-items-center" onclick="badge_go()">
+                      <div class="mr-3" id = "badge_content">
+                      </div>
+                      <div id = "alert_center">
+                          <div id = "alert_time" class="small text-gray-500"></div>
+                          <span id = "alert_content" class="font-weight-bold"></span>
+                      </div>
+                  </a>
+
+                  <a class="dropdown-item text-center small text-gray-500" onclick="badge_go()">결과 확인하기</a>
+              </div>
+          </li>
+
+
+          <div class="topbar-divider d-none d-sm-block"></div>
+
+          <!-- Nav Item - Login-->
+          <li id="login-menu" class="nav-item no-arrow" style="cursor:pointer">
+            <a class="nav-link" data-toggle="modal" data-target="#logoutModal">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="font-size: 1.3rem;">
+                    LOGOUT
+                    <i class="bi bi-box-arrow-in-right"></i>
+                </span>
+            </a>
+        </li>
+      </ul>
+      </div>
+    </nav>
+
+  <h1> <strong>요청이력</strong> </h1>
+    <div id = "section" style="text-align:center; width: 90%; ">
+        <div style="margin-left:10%">
+            <table class="table" id = "table_contents">
+                <thead>
+                    <tr>
+                        <th onclick = "sortTable(0, 'table_contents')" style="width:20%"> 날짜 </th>
+                        <th onclick = "sortTable(1, 'table_contents')" style="width:25%"> 접속번호/SAID </th>
+                        <th onclick = "sortTable(2, 'table_contents')" style="width:15%"> 유형 </th>
+                        <th onclick = "sortTable(3, 'table_contents')"style="width:20%"> 국사 </th>
+                        <th style="width:20%"> 결과 </th>
+                    </tr>
+                </thead>
+                <tbody id = "history_table">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <!-- Modal Real -->
+    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalScrollableTitle">요청 결과</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <center class = "error_history">
+                          <div><h8> 고장 이력 </h8></div>
+                  </center>
+                  <div>
+                          <div id = "error_table">
+
+                          </div>
+                  </div>
+                  <hr class="dashed">
+                  <center><h8> 진단 결과 </h8><a id = "hide_text"></a></center>
+                  <section class="page-section" id="request_result"> <!-- About Section Heading-->
+                      <div class="container">
+                          <table class="table table-bordered" style = "font-size : 0.8rem;  margin-top: 20px;">
+                              <tr style="background-color:aliceblue">
+                              <th>구분</th>
+                              <th>항목</th>
+                              <th>시험결과</th>
+                              </tr>
+                              <tr>
+                              <td rowspan='4'>회선<br>정보</td>
+                              <td>SAID</td>
+                              <td id = "saidnum"> </td>
+                              </tr>
+                              <tr>
+                              <td>접속번호</td>
+                              <td id = "accessnum"></td>
+                              </tr>
+                              <tr>
+                              <td>상품명/상태</td>
+                              <td id = "product_info"></td>
+                              </tr>
+                              <tr>
+                              <td>진행중오더</td>
+                              <td id = "order_ing"></td>
+                              </tr>
+
+                              <tr>
+                              <td rowspan='2'>GIGA<br>사용량<br>조회</td>
+                              <td>세션제어상태</td>
+                              <td id = "session_status"></td>
+                              </tr>
+                              <tr>
+                              <td>세션제어이력</td>
+                              <td id = "session_history"></td>
+                              </tr>
+
+                              <tr>
+                              <td rowspan='2'>회선<br>인증</td>
+                              <td>포트 일치</td>
+                              <td id = "port_same"></td>
+                              </tr>
+                              <tr>
+                              <td>제어 상태</td>
+                              <td id = "control"></td>
+                              </tr>
+
+                              <tr>
+                              <td rowspan='8'>ONT</td>
+                              <td>상위구간트래픽</td>
+                              <td id = "traffic_up"></td>
+                              </tr>
+                              <tr>
+                              <td>RN다운/이력</td>
+                              <td id = "rn_down"></td>
+                              </tr>
+                              <tr>
+                              <td>Inet-Tie</td>
+                              <td id = "inet_tie">F024R122-1006</td>
+                              </tr>
+                              <tr>
+                              <td>ONT 맥</td>
+                              <td id = "ont_mac"></td>
+                              </tr>
+                              <tr>
+                              <td>광수신레벨</td>
+                              <td id = "optical_level"></td>
+                              </tr>
+                              <tr>
+                              <td>프로파일</td>
+                              <td id = "profile"></td>
+                              </tr>
+                              <tr>
+                              <td>MAX호스트</td>
+                              <td id = "max_host"></td>
+                              </tr>
+                              <tr>
+                              <td>CRC</td>
+                              <td id = "crc"></td>
+                              </tr>
+
+                              <tr>
+                              <td rowspan='4'>ONT<br>포트</td>
+                              <td>Port1</td>
+                              <td id = "port1"></td>
+                              </tr>
+                              <tr>
+                              <td>Port2</td>
+                              <td id = "port2"></td>
+                              </tr>
+                              <tr>
+                              <td>Port3</td>
+                              <td id = "port3"></td>
+                              </tr>
+                              <tr>
+                              <td>Port4</td>
+                              <td id = "port4"></td>
+                              </tr>
+                          </table>
+                      </div>
+                  </section>
+                  <hr class="dashed">
+                      
+                      
+              </div>
+              <div class="modal-footer" >
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Modal Hybrid -->
+  <div class="modal fade" id="exampleModalScrollable2" tabindex="-1" aria-labelledby="exampleModalScrollableTitle2" aria-hidden="true" >
+      <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalScrollableTitle2">요청 결과</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <center class = "error_history">
+                          <div><h8> 고장 이력 </h8></div>
+                  </center>
+                  <div>
+                          <div id = "error_table2">
+
+                          </div>
+                  </div>
+                  <hr class="dashed">
+                  <center><h8> 진단 결과 </h8><a id = "hide_text2"></a></center>
+                  <section class="page-section" id="request_result2"> <!-- About Section Heading-->
+                      <div class="container">
+                          <table class="table table-bordered" style = "font-size : 0.8rem; margin-top: 20px;">
+                              <tr style="background-color:aliceblue">
+                              <th>구분</th>
+                              <th>항목</th>
+                              <th>시험결과</th>
+                              </tr>
+                              <tr>
+                              <td rowspan='4'>회선<br>정보</td>
+                              <td>SAID</td>
+                              <td id = "saidnum2"> </td>
+                              </tr>
+                              <tr>
+                              <td>접속번호</td>
+                              <td id = "accessnum2"></td>
+                              </tr>
+                              <tr>
+                              <td>상품명/상태</td>
+                              <td id = "product_info2"></td>
+                              </tr>
+                              <tr>
+                              <td>진행중오더</td>
+                              <td id = "order_ing2"></td>
+                              </tr>
+
+                              <tr>
+                              <td rowspan='2'>GIGA&nbsp<br>사용량<br>조회</td>
+                              <td>세션제어상태</td>
+                              <td id = "session_status2"></td>
+                              </tr>
+                              <tr>
+                              <td>세션제어이력</td>
+                              <td id = "session_history2"></td>
+                              </tr>
+
+                              <tr>
+                              <td rowspan='2'>회선<br>인증</td>
+                              <td>포트 일치</td>
+                              <td id = "port_same2"></td>
+                              </tr>
+                              <tr>
+                              <td>제어 상태</td>
+                              <td id = "control2"></td>
+                              </tr>
+
+                              <tr>
+                              <td rowspan='7'>L2</td>
+                              <td>Inet-Tie</td>
+                              <td id = "inet_tie2"></td>
+                              </tr>
+                              <tr>
+                              <td>상위구간 트래픽</td>
+                              <td id = "traffic_up2"></td>
+                              </tr>
+                              <tr>
+                              <td>설치위치</td>
+                              <td id = "location">F024R122-1006</td>
+                              </tr>
+                              <tr>
+                              <td>다운상태/이력</td>
+                              <td id = "down_history"></td>
+                              </tr>
+                              <tr>
+                              <td>링크속도</td>
+                              <td id = "link_speed"></td>
+                              </tr>
+                              <tr>
+                              <td>프로파일</td>
+                              <td id = "profile2"></td>
+                              </tr>
+                              <tr>
+                              <td>CRC</td>
+                              <td id = "crc2"></td>
+                              </tr>
+
+                              <tr>
+                              <td rowspan='4'>댁내<br>단말</td>
+                              <td>Port1</td>
+                              <td id = "port21"></td>
+                              </tr>
+                              <tr>
+                              <td>Port2</td>
+                              <td id = "port22"></td>
+                              </tr>
+                              <tr>
+                              <td>Port3</td>
+                              <td id = "port23"></td>
+                              </tr>
+                              <tr>
+                              <td>Port4</td>
+                              <td id = "port24"></td>
+                              </tr>
+                          </table>
+                      </div>
+                  </section>
+                  <hr class="dashed">
+                  
+              </div>
+              <div class="modal-footer" >
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Modal no -->
+  <div class="modal fade" id="exampleModalScrollable3" tabindex="-1" aria-labelledby="exampleModalScrollableTitle2" aria-hidden="true" >
+      <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalScrollableTitle3">요청 결과</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <center class = "error_history">
+                          <div><h8> 고장 이력 </h8></div>
+                  </center>
+                  <div>
+                          <div id = "error_table3">
+                          </div>
+                  </div>
+                  <hr class="dashed">
+                  <center>
+                      <div><h8> 진단 결과 </h8><a id = "hide_text3"></a></div>
+                      <h8 style = "font-weight:bold;"> 진단 관련 사이트 내에서 <br> 해당 접속번호/SAID는 검색 불가능합니다. <br> </h8>
+                      <h8> (기가서비스체커의 에러가 아님) <br> </h8>
+                  </center>
+
+
+                  <hr class="dashed">
+                  
+              </div>
+              <div class="modal-footer" >
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Toast Message -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index:-1;">
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+      <div class="toast-header">
+      <img class="rounded me-2">
+      <strong class="me-auto">Alarm</strong>
+      <small>11 mins ago</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+      Hello, world! This is a toast message.
+      </div>
+  </div>
+  </div>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" style="font-family: Noto Sans Medium;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">⨻알림⨻</h5>
+                </div>
+                <div class="modal-body">로그아웃 하시겠습니까? 아래 버튼을 클릭해주세요. </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a id="btn-logout"class="btn btn-primary">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script>
+      function maskingSaid(said){
+        return said.replace(said.substring(8,11), "***");
+      }
+  </script>
+  <script>
+    function sortTable(n, tableid) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById(tableid);
+      switching = true;
+      dir = "asc";
+      while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("td")[n];
+          y = rows[i + 1].getElementsByTagName("td")[n];
+          if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              shouldSwitch= true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount ++;
+        } else {
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+</script>
+
+<script type = "text/javascript">
+  function search_said(){
+      var input, filter, table ,tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("table_contents2");
+      tr = table.getElementsByTagName("tr");
+      // console.log(tr);
+      for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[2];
+      // console.log(td);
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        
+      //   console.log("1", txtValue, td.textContent, td.innerText);
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+          // console.log("check");
+        } else {
+          tr[i].style.display = "none";
+          // console.log("noncheck");
+        }
+      }
+    }
+  }
+</script>
+<script type = "text/javascript">
+  function search_said2(){
+      var input, filter, table ,tr, td, i, txtValue;
+      input = document.getElementById("myInput2");
+      filter = input.value.toUpperCase();
+      
+      table = document.getElementById("table_contents");
+      tr = table.getElementsByTagName("tr");
+      
+      // console.log(tr);
+      for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      // console.log(td);
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+      //   console.log("2", txtValue, td.textContent, td.innerText);
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+          // console.log("check");
+        } else {
+          tr[i].style.display = "none";
+          // console.log("noncheck");
+        }
+      }
+    }
+  }
+</script>
+<script type = "text/javascript">
+  function post_result(clicked_id){
+      // console.log(clicked_id);
+      $("#error_table").empty();
+      $("#error_table2").empty();
+      $("#error_table3").empty();
+      var data = {
+          "clicked_id" : clicked_id
+      };
+      $.ajax({
+          method : 'POST',
+          url : '/request_result',
+          data : JSON.stringify(data),
+          contentType : "application/json",
+          success : function(result){
+              // console.log(result);
+              if(result[0][0]['real_hybrid']== "Hybrid"){
+                  document.getElementById("error_table2").style.display = "block";
+                  document.getElementById("hide_text2").innerHTML = clicked_id;
+                  document.getElementById("hide_text2").style.display = "none";
+                  document.getElementById("saidnum2").innerHTML = maskingSaid(result[0][0]['num']);
+                  document.getElementById("accessnum2").innerHTML = result[0][0]['accessnum'];
+                  document.getElementById("product_info2").innerHTML = result[0][0]['product_info'];
+                  document.getElementById("order_ing2").innerHTML = result[0][0]['order_ing'];
+                  document.getElementById("session_status2").innerHTML = result[0][0]['session_status'];
+                  document.getElementById("session_history2").innerHTML = result[0][0]['session_history'];
+                  document.getElementById("port_same2").innerHTML = result[0][0]['port_same'];
+                  document.getElementById("control2").innerHTML = result[0][0]['control'];
+                  document.getElementById("inet_tie2").innerHTML = result[0][0]['inet_tie'];
+                  document.getElementById("traffic_up2").innerHTML = result[0][0]['traffic_up'];
+                  document.getElementById("location").innerHTML = result[0][0]['location'];
+                  document.getElementById("down_history").innerHTML = result[0][0]['down_history'];
+                  document.getElementById("link_speed").innerHTML = result[0][0]['link_speed'];
+                  document.getElementById("profile2").innerHTML = result[0][0]['profile'];
+                  document.getElementById("crc2").innerHTML = result[0][0]['crc'];
+                  document.getElementById("port21").innerHTML = result[0][0]['port1'];
+                  document.getElementById("port22").innerHTML = result[0][0]['port2'];
+                  document.getElementById("port23").innerHTML = result[0][0]['port3'];
+                  document.getElementById("port24").innerHTML = result[0][0]['port4'];
+                  if(result[1] == "nothing"){
+                      document.getElementById("error_table2").style.display = "none";
+                  }else{
+                      locations = result[1];
+                      for (var i in locations){
+                          var row = `<input type="checkbox" class="checkbox" id="expandable-input, ${locations[i]['date_']}" />
+<label for="expandable-input, ${locations[i]['date_']}" class="title" style = "background-color: #F2F2F2; width:100%">
+  <img src = "../static/folder4.png"  style="float:left; margin-left:10px; margin-right:5px; margin-top:10px; width:53.75px; height:auto;"/>
+  <span style="font-size:0.8rem;" > ${locations[i]['product_info']} <br> inet-tie : ${locations[i]['inet_tie']} <br> </span>
+  <span style="font-size:0.8rem; color:#999999; "> 고장접수날짜 : ${locations[i]['date_'].substr(0,10)} </span>
+</label>
+<div class="desc">
+  <center>
+      <table style = "width:100%;">
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; ">VOC 내용</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">VOC 시설</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">고장원인</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">수리내용</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">출동여부</th>
+          </tr>
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/content.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/modem.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/find.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/repair.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/go.png"  style="width:50%; height:auto;"/></td>
+          </tr>
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_cause']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_fix']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_type']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['go']}</td>
+          </tr>
+      </table>
+      </center>
+</div>`
+                          var table = $('#error_table2');
+                          table.append(row);
+                          }
+                  }
+                  $("#exampleModalScrollable2").modal("show");
+              }else if(result[0][0]['real_hybrid'] == "Real"){
+                  document.getElementById("error_table").style.display = "block";
+                  document.getElementById("hide_text").innerHTML = clicked_id;
+                  document.getElementById("hide_text").style.display = "none";
+                  document.getElementById("saidnum").innerHTML = maskingSaid(result[0][0]['num']);
+                  document.getElementById("accessnum").innerHTML = result[0][0]['accessnum'];
+                  document.getElementById("product_info").innerHTML = result[0][0]['product_info'];
+                  document.getElementById("order_ing").innerHTML = result[0][0]['order_ing'];
+                  document.getElementById("session_status").innerHTML = result[0][0]['session_status'];
+                  document.getElementById("session_history").innerHTML = result[0][0]['session_history'];
+                  document.getElementById("port_same").innerHTML = result[0][0]['port_same'];
+                  document.getElementById("control").innerHTML = result[0][0]['control'];
+                  document.getElementById("traffic_up").innerHTML = result[0][0]['traffic_up'];
+                  document.getElementById("rn_down").innerHTML = result[0][0]['rn_down'];
+                  document.getElementById("inet_tie").innerHTML = result[0][0]['inet_tie'];
+                  document.getElementById("ont_mac").innerHTML = result[0][0]['ont_mac'];
+                  document.getElementById("optical_level").innerHTML = result[0][0]['optical_level'];
+                  document.getElementById("profile").innerHTML = result[0][0]['profile'];
+                  document.getElementById("max_host").innerHTML = result[0][0]['max_host'];
+                  document.getElementById("crc").innerHTML = result[0][0]['crc'];
+                  document.getElementById("port1").innerHTML = result[0][0]['port1'];
+                  document.getElementById("port2").innerHTML = result[0][0]['port2'];
+                  document.getElementById("port3").innerHTML = result[0][0]['port3'];
+                  document.getElementById("port4").innerHTML = result[0][0]['port4'];
+                  if(result[1] == "nothing"){
+                      document.getElementById("error_table").style.display = "none";
+                  }else{
+                      locations = result[1];
+                      for (var i in locations){
+                          var row = `<input type="checkbox" class="checkbox" id="expandable-input, ${locations[i]['date_']}" />
+<label for="expandable-input, ${locations[i]['date_']}" class="title" style = "background-color: #F2F2F2; width:100%">
+  <img src = "../static/folder4.png"  style="float:left; margin-left:10px; margin-right:5px; margin-top:10px; width:53.75px; height:auto;"/>
+  <span style="font-size:0.8rem;" > ${locations[i]['product_info']} <br> inet-tie : ${locations[i]['inet_tie']} <br> </span>
+  <span style="font-size:0.8rem; color:#999999; "> 고장접수날짜 : ${locations[i]['date_'].substr(0,10)} </span>
+</label>
+<div class="desc">
+  <center>
+      <table style = "width:100%;">
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; ">VOC 내용</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">VOC 시설</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">고장원인</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">수리내용</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">출동여부</th>
+          </tr>
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/content.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/modem.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/find.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/repair.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/go.png"  style="width:50%; height:auto;"/></td>
+          </tr>
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_cause']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_fix']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_type']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['go']}</td>
+          </tr>
+      </table>
+      </center>
+</div>`
+                          var table = $('#error_table');
+                          table.append(row);
+                      }
+                  }
+                  $("#exampleModalScrollable").modal("show");
+              }else if(result[0] == "nothing"){
+                  locations = result[1];
+                  document.getElementById("error_table3").style.display = "block";
+                  if(result[1] == "nothing"){
+                      document.getElementById("error_table3").style.display = "none";
+                  }else{
+                      locations = result[1];
+                      for (var i in locations){
+                          var row = `<input type="checkbox" class="checkbox" id="expandable-input, ${locations[i]['date_']}" />
+<label for="expandable-input, ${locations[i]['date_']}" class="title" style = "background-color: #F2F2F2; width:100%">
+  <img src = "../static/folder4.png"  style="float:left; margin-left:10px; margin-right:5px; margin-top:10px; width:53.75px; height:auto;"/>
+  <span style="font-size:0.8rem;" > ${locations[i]['product_info']} <br> inet-tie : ${locations[i]['inet_tie']} <br> </span>
+  <span style="font-size:0.8rem; color:#999999; "> 고장접수날짜 : ${locations[i]['date_'].substr(0,10)} </span>
+</label>
+<div class="desc">
+  <center>
+      <table style = "width:100%;">
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; ">VOC 내용</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">VOC 시설</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">고장원인</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">수리내용</th>
+              <th style="border: 1px solid #cecece; text-align: center; font-size:0.8rem;">출동여부</th>
+          </tr>
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/content.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/modem.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/find.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/repair.png"  style="width:50%; height:auto;"/></td>
+              <td style="border: 1px solid #cecece; text-align: center;"><img src = "../static/go.png"  style="width:50%; height:auto;"/></td>
+          </tr>
+          <tr style="border: 1px solid #cecece; text-align: center;">
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_cause']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_fix']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['voc_type']}</td>
+              <td style="border: 1px solid #cecece; text-align: center; font-size:0.8rem; width:20%; word-break: break-all;">${locations[i]['go']}</td>
+          </tr>
+      </table>
+      </center>
+</div>`
+                          var table = $('#error_table3');
+                          table.append(row);
+                      }
+                  }
+                  $("#exampleModalScrollable3").modal("show");
+              }
+          }
+      });
+  }
+</script>
+<script type = "text/javascript">
+only_history();
+  function only_history(){
+      $("#history_table").empty();
+      var data = "";
+      $.ajax({
+          method : 'POST',
+          url : '/only_history',
+          data : JSON.stringify(data),
+          contentType : "application/json",
+          success : function(result){
+              locations = JSON.parse(result);
+              for (var i in locations){
+                  var row = `<tr id = "hide">
+                      <td class = "td_hide" >${locations[i]['date_'].substr(0,11)}</td>
+                      <td class = "td_hide" data-toggle="popover" data-content="IGOR" data-trigger="hover">${maskingSaid(locations[i]['num'])}</td>
+                      <td class = "td_hide">${locations[i]['service_type']}</td>
+                      <td class = "td_hide">${locations[i]['region'].replace(/국사/g, '')}</td>
+                      <td><button type ="button" id = "${locations[i]['date_']},${locations[i]['num']}" class = "btn btn-primary btn-sm" onclick = "post_result(this.id)">확인</button> </td>
+                      </tr>`
+                  var table = $('#history_table');
+                  table.append(row);
+                  document.getElementById("hybrid_hide").style.display = "block";
+                  document.getElementById("real_hide").style.display = "block";
+              }
+           }
+      });
+  }
+</script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.js"></script> -->
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>

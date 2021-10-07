@@ -9,7 +9,6 @@ from email.mime.image import MIMEImage
 from email import encoders
 from email.message import EmailMessage
 import pymysql
-from jwtTokenUtil import *
 from sqlalchemy import create_engine, text
 
 def driq_request_history(hdr, req, app):
@@ -18,75 +17,37 @@ def driq_request_history(hdr, req, app):
     num = req['num']
     service_type = req['service_type']
     region = req['region']
-    
-    try:
-        if (isAuthorized(hdr, app) == False):
-            raise Exception("token is unauthorized.")
 
-        if not True in [badchar in id or badchar in sa_type or badchar in num or badchar in service_type or badchar in region for badchar in "\n'\""]:
-        
-            now = time.localtime()
-            now_time = "%02d/%02d %02d:%02d:%02d" % (now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
-    
-            sql = "INSERT INTO driq_request (id, date_, request_type, num, service_type, region, rpa_check) " \
-                "VALUES (%s,%s,%s,%s,%s,%s,'N')"
-    
-            app.database.execute(sql, id, now_time, sa_type, num, service_type, region)
-    
-            sql2 = "SELECT count(*) FROM `driq_request` WHERE date_ <= %s AND rpa_check = 'N' ORDER BY date_"
-            rows = app.database.execute(sql2, now_time).fetchone()[0]
-    
-            # sql3 = "SELECT date_, num, service_type, region FROM driq_request WHERE id = %s AND rpa_check = 'Y' ORDER BY date_ LIMIT 10"
-            # rows2 = app.database.execute(sql2, id).fetchall()
-            return json.dumps(rows)
-            
-    except Exception as e:
-        # 잘못된 토큰 (로그아웃/만료)
-        if str(e) == "token is unauthorized.":
-            response = app.response_class(
-                response = json.dumps({'returnCode': 'NG', 'message': str(e)}),
-                status = 401,
-                mimetype = 'application/json'
-            )
-            return response
 
-        response = app.response_class(
-            response = json.dumps({'returnCode': 'NG', 'message': str(e)}),
-            status = 200,
-            mimetype = 'application/json'
-        )
+    if not True in [badchar in id or badchar in sa_type or badchar in num or badchar in service_type or badchar in region for badchar in "\n'\""]:
+    
+        now = time.localtime()
+        now_time = "%02d/%02d %02d:%02d:%02d" % (now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
 
-        return response
+        sql = "INSERT INTO driq_request (id, date_, request_type, num, service_type, region, rpa_check) " \
+            "VALUES (%s,%s,%s,%s,%s,%s,'N')"
+
+        app.database.execute(sql, id, now_time, sa_type, num, service_type, region)
+
+        sql2 = "SELECT count(*) FROM `driq_request` WHERE date_ <= %s AND rpa_check = 'N' ORDER BY date_"
+        rows = app.database.execute(sql2, now_time).fetchone()[0]
+
+        # sql3 = "SELECT date_, num, service_type, region FROM driq_request WHERE id = %s AND rpa_check = 'Y' ORDER BY date_ LIMIT 10"
+        # rows2 = app.database.execute(sql2, id).fetchall()
+        return json.dumps(rows)
+
 
 def driq_only_history(hdr, req, app):
     id = req['id']
-    try:
-        if (isAuthorized(hdr, app) == False):
-            raise Exception("token is unauthorized.")
+  
     
-        if not True in [badchar in id for badchar in "\n'\""]:
-            sql2 = "SELECT date_, num, service_type, region FROM driq_request WHERE id = %s AND rpa_check = 'YY' ORDER BY date_ DESC"
-            rows = app.database.execute(sql2, id).fetchall()
-            result = [dict(row) for row in rows] 
-            return json.dumps(result) 
+    if not True in [badchar in id for badchar in "\n'\""]:
+        sql2 = "SELECT date_, num, service_type, region FROM driq_request WHERE id = %s AND rpa_check = 'YY' ORDER BY date_ DESC"
+        rows = app.database.execute(sql2, id).fetchall()
+        result = [dict(row) for row in rows] 
+        return json.dumps(result) 
             
-    except Exception as e:
-        # 잘못된 토큰 (로그아웃/만료)
-        if str(e) == "token is unauthorized.":
-            response = app.response_class(
-                response = json.dumps({'returnCode': 'NG', 'message': str(e)}),
-                status = 401,
-                mimetype = 'application/json'
-            )
-            return response
-
-        response = app.response_class(
-            response = json.dumps({'returnCode': 'NG', 'message': str(e)}),
-            status = 200,
-            mimetype = 'application/json'
-        )
-
-        return response
+    
         
 def driq_all_history(app):
     sql = "SELECT id, date_, num, service_type, region FROM driq_request WHERE rpa_check = 'YY' or rpa_check = 'Y' ORDER BY date_ DESC"
@@ -95,10 +56,9 @@ def driq_all_history(app):
     return json.dumps(result) 
 
 def driq_request_result(req, app):
-    id = req['username']
     clicked_id = req['clicked_id']
     
-    if not True in [badchar in id or badchar in clicked_id for badchar in "\n'\""]:
+    if not True in [badchar in clicked_id for badchar in "\n'\""]:
         date_ = clicked_id.split(",")[0]
         num = clicked_id.split(",")[1]
 

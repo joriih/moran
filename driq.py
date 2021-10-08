@@ -1,7 +1,6 @@
 from flask import json, jsonify
 import time
 import sqlite3
-from openpyxl import Workbook
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -9,7 +8,7 @@ from email.mime.image import MIMEImage
 from email import encoders
 from email.message import EmailMessage
 import pymysql
-from sqlalchemy import create_engine, text
+# from sqlalchemy import create_engine, text
 
 def driq_request_history(hdr, req, app):
     id = req['username']

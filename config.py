@@ -1,5 +1,4 @@
 import os
-import psycopg2
 
 # Database
 DATABASES_SELECTOR = {
@@ -13,11 +12,11 @@ DATABASES_SELECTOR = {
     },
     'mariadb': {
         'ENGINE': 'mariadb',
-        'NAME': os.environ.get('DB_NAME', 'gc'),
-        'USER': os.environ.get('DB_USER', 'gc').rstrip(),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'Driq1234').rstrip(),
-        'HOST': os.environ.get('DB_HOST', '10.217.166.215'),
-        'PORT': os.environ.get('DB_PORT', 40273),
+        'NAME': os.environ.get('DB_NAME', 'test'),
+        'USER': os.environ.get('DB_USER', 'root').rstrip(),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'nam1234').rstrip(),
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DB_PORT', 40123),
     },
 }
 
